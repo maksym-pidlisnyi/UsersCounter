@@ -1,0 +1,38 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Counter</title>
+</head>
+<body>
+<div>
+    <h1>Counter: </h1>
+    <h1 id="counter"></h1>
+</div>
+
+<script>
+    fetch('./counter').then(value => {
+        return value.json();
+    }).then(data => {
+        let obj = JSON.parse(data);
+        let counter = obj.counter;
+        if ("oldUser" in sessionStorage) {
+            console.log("old user - " + counter)
+            alert('Hi old friend!');
+        } else {
+            sessionStorage.setItem("oldUser", "true");
+            counter += 1;
+            console.log("new user - "+counter);
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/updateFile", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                value: counter
+            }));
+        }
+        let element = document.getElementById('counter');
+        element.innerHTML = counter;
+    });
+
+</script>
+</body>
+</html>
